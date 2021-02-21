@@ -1,6 +1,6 @@
-# `matrix-aelf-bot`
+# `matrix-bot-viale`
 
-Un bot pour récupérer l'évangile et les lectures du jour sur aelf.org
+Un bot spécifiquement concu pour la Viale, communauté religieuse en amour, et en guerre contre l'idéal transhumaniste !
 
 - Remplacer `config/example.yaml` par `config/default.yaml`
 - Changer la configuration dans config/default.yaml.
