@@ -6,14 +6,14 @@ export async function runHelloCommand(roomId: string, event: MessageEvent<Messag
     let sayHelloTo = args[1];
     if (!sayHelloTo) sayHelloTo = event.sender;
 
-    let text = `Bwouf ${sayHelloTo}!`;
-    let html = `Bwouf ${htmlEscape(sayHelloTo)}!`;
+    let text = `Hello ${sayHelloTo}!`;
+    let html = `Hello ${htmlEscape(sayHelloTo)}!`;
 
     if (sayHelloTo.startsWith("@")) {
         // Awesome! The user supplied an ID so we can create a proper mention instead
         const mention = await MentionPill.forUser(sayHelloTo, roomId, client);
-        text = `Bwouf ${mention.text}!`;
-        html = `Bwouf ${mention.html}!`;
+        text = `Hello ${mention.text}!`;
+        html = `Hello ${mention.html}!`;
     }
 
     // Now send that message as a notice

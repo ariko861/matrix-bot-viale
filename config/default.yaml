@@ -27,7 +27,7 @@ permissions:
     use: ["*"]
 
 profile:
-    displayname: "AELF Bot"
+    displayname: "Test Bot"
     avatar: true
 
 # Log level for bot, INFO | DEBUG | WARN | ERROR

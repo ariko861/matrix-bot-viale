@@ -7,7 +7,7 @@ import * as htmlEscape from "escape-html";
 
 // The prefix required to trigger the bot. The bot will also respond
 // to being pinged directly.
-export const COMMAND_PREFIX = "!aelf";
+export const COMMAND_PREFIX = "!patton";
 
 // This is where all of our commands will be handled
 export default class CommandHandler {
@@ -88,8 +88,8 @@ export default class CommandHandler {
                 reply["msgtype"] = "m.notice"; // Bots should always use notices
                 return this.client.sendMessage(roomId, reply);
             }
-            
-            if (args[0] === "hello") {
+            const salutations = ['hello', 'salut', 'bonjour'];
+            if ( salutations.includes(args[0]) ) {
                 return runHelloCommand(roomId, event, args, this.client);
             } else if (args[0] === "messe" || args[0] === "evangile" || args[0] === "lecture" || args[0] === "psaume"){
                 return runMesseCommand(roomId, args, this.client);
@@ -97,16 +97,16 @@ export default class CommandHandler {
                 return runAutoCommand(roomId, args, this.client);
             } else {
                 const help = "" +
-                    "!aelf messe [tout]     - Afficher les lectures de la messe du jour ( ajouter 'tout' pour obtenir le contenu des textes également ).\n" +
-                    "!aelf evangile         - Afficher l'évangile du jour.\n" +
-                    "!aelf lecture          - Afficher la première lecture du jour.\n" +
-                    "!aelf psaume           - Afficher le psaume de la messe du jour.\n" +
-                    "!aelf auto hh:mm       - Programmer automatiquement la commande messe tous les jours à l'heure donnée.\n" +
-                    "!aelf auto stop        - Annuler l'envoi automatique\n" +
-                    "!aelf help             - Afficher ce menu d'aide\n";
+                    "!patton messe [tout]     - Afficher les lectures de la messe du jour ( ajouter 'tout' pour obtenir le contenu des textes également ).\n" +
+                    "!patton evangile         - Afficher l'évangile du jour.\n" +
+                    "!patton lecture          - Afficher la première lecture du jour.\n" +
+                    "!patton psaume           - Afficher le psaume de la messe du jour.\n" +
+                    "!patton auto hh:mm       - Programmer automatiquement la commande messe tous les jours à l'heure donnée.\n" +
+                    "!patton auto stop        - Annuler l'envoi automatique\n" +
+                    "!patton help             - Afficher ce menu d'aide\n";
 
-                const text = `Menu d'aide:\n${help}`;
-                const html = `<b>Menu d'aide:</b><br /><pre><code>${htmlEscape(help)}</code></pre>`;
+                const text = `Menu d'aide, bwouf :\n${help}`;
+                const html = `<b>Menu d'aide, bwouf:</b><br /><pre><code>${htmlEscape(help)}</code></pre>`;
                 const reply = RichReply.createFor(roomId, ev, text, html); // Note that we're using the raw event, not the parsed one!
                 reply["msgtype"] = "m.notice"; // Bots should always use notices
                 return this.client.sendMessage(roomId, reply);
