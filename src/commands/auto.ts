@@ -28,7 +28,7 @@ export async function runAutoCommand(roomId: string, args: string[], client: Mat
     function checkDailyTimeAndRegister(dailytime){
         if (dailytime) {
             db.insertCron(roomId, dailytime, 'messe', function(){
-                let text = 'Le bot AELF est maintenant programmé pour donner les lectures tous les jours à ' + `${dailytime}`;
+                let text = 'Patton va maintenant donner les lectures tous les jours à ' + `${dailytime}`;
                 return sendSimpleMessage(client, roomId, text);
             });
         }
@@ -36,7 +36,7 @@ export async function runAutoCommand(roomId: string, args: string[], client: Mat
     
     if ( cancel_commands.includes(args[1]) ){
         db.deleteCron(roomId, function(){
-            return sendSimpleMessage(client, roomId, "L'envoi automatique a été annulé !")
+            return sendSimpleMessage(client, roomId, "L'envoi automatique a été annulé, Patton va pouvoir se reposer !")
         });
     } else {
         // The first argument is always going to be us, so get the second argument instead.
@@ -44,7 +44,7 @@ export async function runAutoCommand(roomId: string, args: string[], client: Mat
         if (!dailytime) { // si la commande auto est tapée seule
             db.getRoomCron(roomId, function(row){ // vérifier si un envoi auto est déjà programmé.
                 if (row) {
-                    return sendSimpleMessage(client, roomId, "La commande '" + row.command + "' est programmée pour s'executer tous les jours à " + row.time);
+                    return sendSimpleMessage(client, roomId, "Patton va executer l'ordre '" + row.command + "' tous les jours à " + row.time);
                 } else { // si non, programmer à l'heure actuelle.
                     let d = new Date();
                     dailytime = d.toLocaleTimeString("fr-FR", {hour12: false, hour: '2-digit', minute:'2-digit'});
@@ -54,7 +54,7 @@ export async function runAutoCommand(roomId: string, args: string[], client: Mat
         } else {
             dailytime = formatTime(dailytime);
             if ( !dailytime ) {
-                return sendSimpleMessage(client, roomId, `L'heure doit être donnée sous le format 00:00 et comprise entre 00:00 et 23:59`);
+                return sendSimpleMessage(client, roomId, `L'heure doit être donnée sous le format 00:00 et comprise entre 00:00 et 23:59, sinon Patton ne comprend pas.`);
                 
             }
         }
