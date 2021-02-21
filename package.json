@@ -1,21 +1,21 @@
 {
-  "name": "matrix-bot-sdk-bot-template",
+  "name": "matrix-bot-aelf",
   "version": "0.1.0",
-  "author": "TravisR",
+  "author": "Ariko861",
   "license": "Apache-2.0",
-  "description": "A template repository for bots made with the matrix-bot-sdk",
+  "description": "Un bot pour récupérer des informations sur aelf.org",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/turt2live/matrix-bot-sdk-bot-template.git"
+    "url": "git+https://github.com/ariko861/matrix-bot-aelf.git"
   },
   "bugs": {
-    "url": "https://github.com/turt2live/matrix-bot-sdk-bot-template/issues"
+    "url": "https://github.com/ariko861/matrix-bot-aelf/issues"
   },
-  "homepage": "https://github.com/turt2live/matrix-bot-sdk-bot-template#readme",
+  "homepage": "https://github.com/ariko861/matrix-bot-aelf#readme",
   "keywords": [
     "matrix",
     "bot",
-    "template"
+    "aelf"
   ],
   "main": "lib/index.js",
   "scripts": {
@@ -27,7 +27,9 @@
     "config": "^3.3.1",
     "escape-html": "^1.0.3",
     "js-yaml": "^3.13.1",
-    "matrix-bot-sdk": "^0.5.3"
+    "matrix-bot-sdk": "^0.5.3",
+    "node-cron": "^2.0.3",
+    "sqlite3": "^5.0.2"
   },
   "devDependencies": {
     "@types/node": "^12.12.37",
