@@ -80,7 +80,7 @@ export default class CommandHandler {
         // Try and figure out what command the user ran, defaulting to help
         try {
             if (!userIsAllowed) { // Send a message refusing authorization if user is not allowed
-                const notAuthorized = "Désolé, vous n'avez pas l'autorisation de consulter ce Bot";
+                const notAuthorized = "Désolé, Patton n'obéit qu'à ses maîtres.";
                 
                 const text = `${notAuthorized}`;
                 const html = `${htmlEscape(notAuthorized)}`;

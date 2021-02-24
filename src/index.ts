@@ -15,6 +15,7 @@ import { runMesseCommand } from "./commands/messe";
 
 const cron = require('node-cron');
 const db = require('./sqlite');
+const viale = require('./global');
 
 db.createCronTable();
 
@@ -71,7 +72,9 @@ LogService.info("index", "Bot starting...");
                 if ( userPermitted.includes(sender) || userPermitted.includes("*:" + senderServer[1]) ) {
                     return client.joinRoom(roomId);
                 } else {
-                    return client.leaveRoom(roomId);
+                    return client.joinRoom(roomId);
+                    //viale.sendSimpleMessage(client, roomId, "Patton ne va que vers ses maîtres");
+                    //return client.leaveRoom(roomId);
                 }
             });
         }
