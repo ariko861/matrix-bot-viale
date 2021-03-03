@@ -2,8 +2,12 @@ import { LogService, MatrixClient, MessageEvent, RichReply, UserID } from "matri
 import { runHelloCommand } from "./hello";
 import { runMesseCommand } from "./messe";
 import { runAutoCommand } from "./auto";
+import { runMusicCommand } from "./music";
+import { runInviteCommand } from "./invite";
 import config from "../config";
 import * as htmlEscape from "escape-html";
+
+const appFunction = require("../global");
 
 // The prefix required to trigger the bot. The bot will also respond
 // to being pinged directly.
@@ -53,6 +57,8 @@ export default class CommandHandler {
         let senderServerAndName = event.sender.split(":");
         const userIsAllowed = ( userPermitted.includes(event.sender) || userPermitted.includes("*:" + senderServerAndName[1]) || userPermitted.includes("*") );
         
+        const invitePermission = config.permissions.invite;
+        const inviteIsAllowed = ( invitePermission.includes(event.sender) || invitePermission.includes("*:" + senderServerAndName[1]) || invitePermission.includes("*") );
 
         // Ensure that the event is a command before going on. We allow people to ping
         // the bot as well as using our COMMAND_PREFIX.
@@ -79,22 +85,22 @@ export default class CommandHandler {
         
         // Try and figure out what command the user ran, defaulting to help
         try {
-            if (!userIsAllowed) { // Send a message refusing authorization if user is not allowed
-                const notAuthorized = "Désolé, Patton n'obéit qu'à ses maîtres.";
-                
-                const text = `${notAuthorized}`;
-                const html = `${htmlEscape(notAuthorized)}`;
-                const reply = RichReply.createFor(roomId, ev, text, html); // Note that we're using the raw event, not the parsed one!
-                reply["msgtype"] = "m.notice"; // Bots should always use notices
-                return this.client.sendMessage(roomId, reply);
-            }
+            if (!userIsAllowed) return appFunction.sendSimpleMessage(this.client, roomId, "Désolé, Patton n'obéit qu'à ses maîtres."); // renvoie un message si l'utilisateur n'est pas autorisé.
+            
             const salutations = ['hello', 'salut', 'bonjour'];
+            const invitations = ['invite', 'cherche'];
+            const musications = ['music', 'musique', 'song', 'chanson'];
             if ( salutations.includes(args[0]) ) {
                 return runHelloCommand(roomId, event, args, this.client);
             } else if (args[0] === "messe" || args[0] === "evangile" || args[0] === "lecture" || args[0] === "psaume"){
                 return runMesseCommand(roomId, args, this.client);
             } else if (args[0] === "auto"){
                 return runAutoCommand(roomId, args, this.client);
+            } else if ( invitations.includes(args[0]) ){
+                if ( !inviteIsAllowed ) return appFunction.sendSimpleMessage(this.client, roomId, "Désolé, Patton n'obéit qu'à ses maîtres."); // renvoie un message si l'utilisateur n'est pas autorisé.
+                return runInviteCommand(roomId, event, args, this.client);
+            } else if ( musications.includes(args[0]) ){
+                return runMusicCommand(roomId, event, args, this.client);
             } else {
                 const help = "" +
                     "!patton messe [tout]     - Afficher les lectures de la messe du jour ( ajouter 'tout' pour obtenir le contenu des textes également ).\n" +

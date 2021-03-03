@@ -81,8 +81,8 @@ export async function runMesseCommand(roomId: string, args: string[], client: Ma
         } else if (res.statusCode !== 200) {
         console.log('Status:', res.statusCode);
         } else {
-            text += data.informations.jour_liturgique_nom + "\n";
-            html += "<h3>" + data.informations.jour_liturgique_nom + "</h3>\n";
+            text += data.informations.ligne1 + "\n";
+            html += "<h3>" + data.informations.ligne1 + "</h3>\n";
             let lectures = data.messes[0].lectures;
             lectures.forEach(displayLecture);
                    

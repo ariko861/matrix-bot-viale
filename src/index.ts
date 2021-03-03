@@ -122,4 +122,6 @@ LogService.info("index", "Bot starting...");
     await commands.start();
     LogService.info("index", "Starting sync...");
     await client.start(); // This blocks until the bot is killed
-})();
+})().catch((ex) => {
+    LogService.error("Main", "Error occured:", ex);
+});
