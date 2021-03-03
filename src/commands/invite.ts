@@ -11,7 +11,6 @@ export async function runInviteCommand(roomId: string, event: MessageEvent<Messa
         let guestName = await client.getUserProfile(guest);
         let newRoom = await client.createRoom({visibility:"private", invite:[guest], is_direct: true});
         let newEncrypt = await client.sendEvent(newRoom, "m.room.encryption", { algorithm: "m.megolm.v1.aes-sha2" });
-        LogService.error(newEncrypt);
     } catch (e) {
         LogService.error("InviteHandler", e);
         return appFunction.sendSimpleMessage(client, roomId, "Bwouf, je n'ai pas trouvé cette personne !");
