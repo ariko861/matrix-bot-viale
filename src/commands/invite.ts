@@ -9,8 +9,13 @@ export async function runInviteCommand(roomId: string, event: MessageEvent<Messa
     if (!guest) return appFunction.sendSimpleMessage(client, roomId, "Bwouf, qui dois je aller chercher ?");
     try {
         let guestName = await client.getUserProfile(guest);
-        let newRoom = await client.createRoom({visibility:"private", invite:[guest], is_direct: true});
-        let newEncrypt = await client.sendEvent(newRoom, "m.room.encryption", { algorithm: "m.megolm.v1.aes-sha2" });
+        if (guestName) {
+            let newRoom = await client.createRoom({visibility:"private", invite:[guest], is_direct: true});
+            let newEncrypt = await client.sendEvent(newRoom, "m.room.encryption", { algorithm: "m.megolm.v1.aes-sha2" });
+            return appFunction.sendSimpleMessage(client, roomId, "Bwouf, j'ai trouvé " + guestName.displayname );
+        } else {
+            return appFunction.sendSimpleMessage(client, roomId, "Bwouf, je n'ai pas trouvé cette personne !");
+        }
     } catch (e) {
         LogService.error("InviteHandler", e);
         return appFunction.sendSimpleMessage(client, roomId, "Bwouf, je n'ai pas trouvé cette personne !");

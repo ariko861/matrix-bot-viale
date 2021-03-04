@@ -108,7 +108,7 @@ export default class CommandHandler {
                 
                 const salutations = ['hello', 'salut', 'bonjour'];
                 const invitations = ['invite', 'cherche'];
-                const musications = ['music', 'musique', 'song', 'chanson'];
+                const musications = ['music', 'musique', 'song', 'chanson', 'chant'];
                 if ( salutations.includes(args[0]) ) {
                     return runHelloCommand(roomId, event, args, this.client);
                 } else if (args[0] === "messe" || args[0] === "evangile" || args[0] === "lecture" || args[0] === "psaume"){
