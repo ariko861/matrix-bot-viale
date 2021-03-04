@@ -1,4 +1,7 @@
 FROM ubuntu:latest
+RUN apt-get -y install apt-transport-https
+ENV TZ=Europe/Paris
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 RUN apt-get update -y
 RUN apt-get -y install lilypond
 
