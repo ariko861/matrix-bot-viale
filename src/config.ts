@@ -12,6 +12,7 @@ interface IConfig {
     dataPath: string;
     country: string;
     permissions: {
+        admin: any,
         invite: any,
         use: any,
     }

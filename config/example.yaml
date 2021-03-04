@@ -23,6 +23,7 @@ country: "france"
 
 # Permissions d'utilisation du bot. Dans invite qui peut l'inviter, dans use qui peut l'utiliser dans un salon.
 permissions:
+    admin: ["@admin:example.com"]
     invite: ["@example:matrix.org", "*:example.com"]
     use: ["*"]
 
