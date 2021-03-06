@@ -47,7 +47,7 @@ module.exports = {
     },
     
     insertMusic: function(musicNumber:string, name:string, path:string, callback:any){
-        db.run("INSERT INTO Musics (musicNumber, name, path) VALUES ($musicNumber, $name, $path) ON CONFLICT(musicNumber) DO UPDATE SET name=excluded.name", {
+        db.run("INSERT INTO Musics (musicNumber, name, path) VALUES ($musicNumber, $name, $path) ON CONFLICT(musicNumber) DO UPDATE SET name=excluded.name,path=excluded.path", {
             $musicNumber: musicNumber,
             $name: name,
             $path: path
@@ -59,11 +59,7 @@ module.exports = {
         db.get("SELECT musicNumber, name, path FROM Musics WHERE musicNumber = $musicNumber", {
             $musicNumber: musicNumber
         }, function(err, row) {
-            if (err){
-                LogService.error(err);
-                return;
-            }
-            callback(row);
+            callback(err, row);
         });
     },   
     listMusics: function(callback:any){

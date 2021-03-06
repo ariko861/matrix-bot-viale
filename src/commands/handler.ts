@@ -7,7 +7,7 @@ import { runInviteCommand } from "./invite";
 import config from "../config";
 import * as htmlEscape from "escape-html";
 const fs = require('fs');
-const db = require('./sqlite');
+const db = require('../sqlite');
 const musicPath = config.dataPath + "/music/";
 const appFunction = require("../global");
 
@@ -54,6 +54,8 @@ export default class CommandHandler {
         if (event.sender === this.userId) return; // Ignore ourselves
         if (event.messageType !== "m.text" && event.messageType !== "m.file") return; // Ignore non-text messages
         
+        let matrixClient = this.client;
+        
         let senderServerAndName = event.sender.split(":");
         // This part is to see if the user is allowed to use the bot.
         const userPermitted = config.permissions.use;
@@ -72,13 +74,13 @@ export default class CommandHandler {
             let response = await this.client.downloadContent(mxc);
             
             let fileName = event.textBody;
-            let musicNumber = fileName.substring(0, fileName.indexOf('_');
+            let musicNumber = fileName.substring(0, fileName.indexOf('_') );
             let musicName = fileName.substring(fileName.indexOf('_') + 1, fileName.indexOf('.ly') );
             
             fs.writeFile( musicPath + musicNumber + '.ly' , response.data, (err) => {
                 if (err) throw err;
-                db.insertMusic(musicNumber, musicName, musicPath + musicNumber + '.ly', function(){
-                    return appFunction.sendSimpleMessage(this.client, roomId, 'Bwouf, nouvelle musique ajoutée !');                    
+                db.insertMusic(musicNumber, musicName, "/music/" + musicNumber + '.ly', function(){
+                    return appFunction.sendSimpleMessage(matrixClient, roomId, 'Bwouf, nouvelle musique ajoutée !');                    
                 });
             });
             
