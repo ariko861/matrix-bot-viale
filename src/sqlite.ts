@@ -21,6 +21,12 @@ const dbSchema = `CREATE TABLE IF NOT EXISTS Crons (
         time text NOT NULL,
         command text NOT NULL
     );`
+    
+const dbMusicSchema = `CREATE TABLE IF NOT EXISTS Musics (
+        musicNumber text NOT NULL UNIQUE PRIMARY KEY,
+        name text,
+        path text NOT NULL UNIQUE
+    );`
 
 module.exports = {
   
@@ -29,6 +35,44 @@ module.exports = {
             if (err) {
                 LogService.error(err);
             }
+        });
+    },
+    
+    createMusicsTable: function(){
+        db.exec(dbMusicSchema, function(err:any){
+            if (err) {
+                LogService.error(err);
+            }
+        });
+    },
+    
+    insertMusic: function(musicNumber:string, name:string, path:string, callback:any){
+        db.run("INSERT INTO Musics (musicNumber, name, path) VALUES ($musicNumber, $name, $path) ON CONFLICT(musicNumber) DO UPDATE SET name=excluded.name", {
+            $musicNumber: musicNumber,
+            $name: name,
+            $path: path
+        }, function(){
+            callback();
+        });
+    },
+    getMusic: function(musicNumber:string, callback:any){
+        db.get("SELECT musicNumber, name, path FROM Musics WHERE musicNumber = $musicNumber", {
+            $musicNumber: musicNumber
+        }, function(err, row) {
+            if (err){
+                LogService.error(err);
+                return;
+            }
+            callback(row);
+        });
+    },   
+    listMusics: function(callback:any){
+        db.all("SELECT * FROM Musics", function(err, list) {
+            if (err){
+                LogService.error(err);
+                return;
+            }
+            callback(list);
         });
     },
     

@@ -7,6 +7,7 @@ import { runInviteCommand } from "./invite";
 import config from "../config";
 import * as htmlEscape from "escape-html";
 const fs = require('fs');
+const db = require('./sqlite');
 const musicPath = config.dataPath + "/music/";
 const appFunction = require("../global");
 
@@ -70,9 +71,15 @@ export default class CommandHandler {
             let mxc = event['content']['url']
             let response = await this.client.downloadContent(mxc);
             
-            fs.writeFile( musicPath + event.textBody , response.data, (err) => {
+            let fileName = event.textBody;
+            let musicNumber = fileName.substring(0, fileName.indexOf('_');
+            let musicName = fileName.substring(fileName.indexOf('_') + 1, fileName.indexOf('.ly') );
+            
+            fs.writeFile( musicPath + musicNumber + '.ly' , response.data, (err) => {
                 if (err) throw err;
-                return appFunction.sendSimpleMessage(this.client, roomId, 'Bwouf, nouvelle musique ajoutée !');
+                db.insertMusic(musicNumber, musicName, musicPath + musicNumber + '.ly', function(){
+                    return appFunction.sendSimpleMessage(this.client, roomId, 'Bwouf, nouvelle musique ajoutée !');                    
+                });
             });
             
 

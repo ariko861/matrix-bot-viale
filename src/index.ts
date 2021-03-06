@@ -18,6 +18,7 @@ const db = require('./sqlite');
 const viale = require('./global');
 
 db.createCronTable();
+db.createMusicsTable();
 
 // First things first: let's make the logs a bit prettier.
 LogService.setLogger(new RichConsoleLogger());
