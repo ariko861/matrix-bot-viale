@@ -16,13 +16,13 @@ export async function runMusicCommand(roomId: string, event: MessageEvent<Messag
     if ( musicNumber === 'list') {
         db.listMusics(function(list){
             let msg = 'Liste des chants disponibles :\n'
-            let htmlmsg = '<b>Liste des chants disponibles :</b></br>'
+            let htmlmsg = '<b>Liste des chants disponibles :</b></br><ul>'
             list.forEach(function(row){
                 msg += row.musicNumber + " - " + row.name + "\n";
-                htmlmsg += "<i>" + row.musicNumber + " - " + row.name + "</i></br>";
+                htmlmsg += "<li><i>" + row.musicNumber + " - " + row.name + "</i></li>";
             });
             msg += "\nPour ajouter un chant, l'administrateur doit envoyer un fichier .ly avec cette nomenclature : '<numéroduchant>_<nomduchant>.ly";
-            htmlmsg += `</br><small>Pour ajouter un chant, l'administrateur doit envoyer un fichier .ly avec cette nomenclature : ${htmlEscape('<numéroduchant>_<nomduchant>')}.ly</small>`;
+            htmlmsg += `</ul></br><small>Pour ajouter un chant, l'administrateur doit envoyer un fichier .ly avec cette nomenclature : ${htmlEscape('<numéroduchant>_<nomduchant>')}.ly</small>`;
             
             return client.sendMessage(roomId, {
                 body: msg,
