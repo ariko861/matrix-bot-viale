@@ -14,6 +14,7 @@ const appFunction = require("../global");
 // The prefix required to trigger the bot. The bot will also respond
 // to being pinged directly.
 export const COMMAND_PREFIX = "!patton";
+export const MUSIC_PREFIX = "!music";
 
 // This is where all of our commands will be handled
 export default class CommandHandler {
@@ -90,10 +91,9 @@ export default class CommandHandler {
 
             // Ensure that the event is a command before going on. We allow people to ping
             // the bot as well as using our COMMAND_PREFIX.
-            const prefixes = [COMMAND_PREFIX, `${this.localpart}:`, `${this.displayName}:`, `${this.userId}:`];
+            const prefixes = [COMMAND_PREFIX, MUSIC_PREFIX, `${this.localpart}:`, `${this.displayName}:`, `${this.userId}:`];
             const prefixUsed = prefixes.find(p => event.textBody.startsWith(p));
-            
-            
+                        
             let args = [];
             
             // Try and figure out what command the user ran, defaulting to help
@@ -118,6 +118,10 @@ export default class CommandHandler {
                 const salutations = ['hello', 'salut', 'bonjour'];
                 const invitations = ['invite', 'cherche'];
                 const musications = ['music', 'musique', 'song', 'chanson', 'chant'];
+                if ( prefixUsed === "!music" ) {
+                    args.unshift("music");
+                    return runMusicCommand(roomId, event, args, this.client);
+                }
                 if ( salutations.includes(args[0]) ) {
                     return runHelloCommand(roomId, event, args, this.client);
                 } else if (args[0] === "messe" || args[0] === "evangile" || args[0] === "lecture" || args[0] === "psaume"){
@@ -131,15 +135,15 @@ export default class CommandHandler {
                     return runMusicCommand(roomId, event, args, this.client);
                 } else {
                     const help = "" +
-                        "!patton messe [tout]     - Afficher les lectures de la messe du jour ( ajouter 'tout' pour obtenir le contenu des textes également ).\n" +
-                        "!patton evangile         - Afficher l'évangile du jour.\n" +
-                        "!patton lecture          - Afficher la première lecture du jour.\n" +
-                        "!patton psaume           - Afficher le psaume de la messe du jour.\n" +
-                        "!patton auto hh:mm       - Programmer automatiquement la commande messe tous les jours à l'heure donnée.\n" +
-                        "!patton auto stop        - Annuler l'envoi automatique\n" +
-                        "!patton music <num>      - Envoyer la partition du chant du carnet au numéro correspondant. ( ex: !patton music 29 )\n" +
-                        "!patton music <num> son  - Envoyer l'audio du chant du carnet au numéro correspondant. ( ex: !patton music 29 )\n" +
-                        "!patton help             - Afficher ce menu d'aide\n";
+                        "- !patton messe [tout]     - Afficher les lectures de la messe du jour ( ajouter 'tout' pour obtenir le contenu des textes également ).\n" +
+                        "- !patton evangile         - Afficher l'évangile du jour.\n" +
+                        "- !patton lecture          - Afficher la première lecture du jour.\n" +
+                        "- !patton psaume           - Afficher le psaume de la messe du jour.\n" +
+                        "- !patton auto hh:mm       - Programmer automatiquement la commande messe tous les jours à l'heure donnée.\n" +
+                        "- !patton auto stop        - Annuler l'envoi automatique\n" +
+                        "- !music <num>             - Envoyer la partition du chant du carnet au numéro correspondant. ( ex: !music 29 )\n" +
+                        "- !music <num> son         - Envoyer l'audio du chant du carnet au numéro correspondant. ( ex: !music 29 )\n" +
+                        "- !patton help             - Afficher ce menu d'aide\n";
 
                     const text = `Menu d'aide, bwouf :\n${help}`;
                     const html = `<b>Menu d'aide, bwouf:</b><br /><pre><code>${help}</code></pre>`;

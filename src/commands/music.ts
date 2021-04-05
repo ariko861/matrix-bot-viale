@@ -11,8 +11,24 @@ const musicPath = config.dataPath + "/music";
 export async function runMusicCommand(roomId: string, event: MessageEvent<MessageEventContent>, args: string[], client: MatrixClient) {
     // The first argument is always going to be us, so get the second argument instead.
     let musicNumber = args[1];
-    if (!musicNumber) return appFunction.sendSimpleMessage(client, roomId, "Bwouf, il me faut un numéro de chanson à aller chercher !");
-    
+    if (!musicNumber || musicNumber === "help" || musicNumber === "aide") {
+        let msg = "Aide pour les chants:\n" +
+                "- !music <num>                             - Envoyer la partition du chant du carnet au numéro correspondant. ( ex: !music 29 )\n" +
+                "- !music <num> son                         - Envoyer l'audio du chant du carnet au numéro correspondant. ( ex: !music 29 son )\n" +
+                "- !music <num> soprano/alto/bass/tenor     - Envoyer seulement la voix indiquée du chant correspondant. ( ex: !music 29 soprano)\n";
+                        
+        let htmlmsg = '<b>Aide pour les chants :</b></br><ul>' +
+                "<li>!music <num>                             - Envoyer la partition du chant du carnet au numéro correspondant. ( ex: !music 29 )</li>" +
+                "<li>!music <num> son                         - Envoyer l'audio du chant du carnet au numéro correspondant. ( ex: !music 29 son )</li>" +
+                "<li>!music <num> soprano/alto/bass/tenor     - Envoyer seulement la voix indiquée du chant correspondant. ( ex: !music 29 soprano)</li>";
+                
+        return client.sendMessage(roomId, {
+                body: msg,
+                msgtype: "m.notice",
+                format: "org.matrix.custom.html",
+                formatted_body: htmlmsg,
+            });
+    }
     if ( musicNumber === 'list') {
         db.listMusics(function(list){
             let msg = 'Liste des chants disponibles :\n'
