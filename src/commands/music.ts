@@ -88,7 +88,11 @@ export async function runMusicCommand(roomId: string, event: MessageEvent<Messag
                 } else {
                     
                     let msgBody = row.musicNumber + voiceOption + " - " + row.name + extension;
-                
+                    
+                    if ( args[2] && ( args[2].startsWith("+") || args[2].startsWith("-") ) ){
+                        
+                    }
+                    
                     if ( args[2] && lilypondCommands.includes(args[2]) ) {
                         extension = ".ly";
                         mime = "text/x-lilypond";
