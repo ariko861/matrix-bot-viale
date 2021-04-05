@@ -3,6 +3,7 @@ import * as htmlEscape from "escape-html";
 import config from "../config";
 const fs = require('fs');
 const appFunction = require("../global");
+const exec = require("child_process").exec;
 const db = require('../sqlite');
 const lilynode = require("../lilynode");
 const musicPath = config.dataPath + "/music";
@@ -88,13 +89,10 @@ export async function runMusicCommand(roomId: string, event: MessageEvent<Messag
                 } else {
                     
                     let msgBody = row.musicNumber + voiceOption + " - " + row.name + extension;
-                    
-                    if ( args[2] && ( args[2].startsWith("+") || args[2].startsWith("-") ) ){
-                        
-                    }
-                    
+                                        
                     if ( args[2] && lilypondCommands.includes(args[2]) ) {
                         extension = ".ly";
+                        msgBody = row.musicNumber + voiceOption + " - " + row.name + extension;
                         mime = "text/x-lilypond";
                         msgType = "m.file";
                         fs.readFile(musicFilePath, async function (err, data) {
@@ -111,24 +109,66 @@ export async function runMusicCommand(roomId: string, event: MessageEvent<Messag
                         });
 
                     } else {
-                    // if file exists :            
-                        lilynode.renderFile(musicFilePath, { format: musicOption, voice: voiceOption }, async function(error, output){
-                            if (error) {
-                                LogService.error(error);
-                                return appFunction.sendSimpleMessage(client, roomId, "Bwouf, il y a eu un problème !");
-                            } else {
-                                let mxc = await client.uploadContent(output, mime, musicNumber + extension );
-                                return client.sendMessage(roomId, {
-                                    body: msgBody,
-                                    msgtype: msgType,
-                                    url: mxc,
-                                    info: {
-                                        mimetype: mime,
+                    // if file exists :
+                        let transposition = args.find(elem => elem.startsWith('+') || elem.startsWith('-') );
+                        if ( transposition ){
+                            let transposetable = {
+                                "+0,5": "transpose e f",
+                                "+1": "transpose c d",
+                                "+1,5": "transpose e g",
+                                "+2": "transpose c e",
+                                "+2,5": "transpose e a",
+                                "-0,5": "transpose f e",
+                                "-1": "transpose d c",
+                                "-1,5":"transpose g e",
+                                "-2": "transpose e c",
+                                "-2,5": "transpose a e"
+                            };
+                            let lycommand = "ly '" + transposetable[transposition] + "' -o " + musicFilePath + ".tmp " + musicFilePath; 
+                            exec(lycommand, function(error, stdout, stderr){
+                                if (error) {
+                                    LogService.error(error);
+                                    return appFunction.sendSimpleMessage(client, roomId, "Il y a eu un problème");
+                                }
+                                lilynode.renderFile(musicFilePath + ".tmp", { format: musicOption, voice: voiceOption }, async function(error, output){
+                                    if (error) {
+                                        LogService.error(error);
+                                        return appFunction.sendSimpleMessage(client, roomId, "Bwouf, il y a eu un problème !");
+                                    } else {
+                                        let mxc = await client.uploadContent(output, mime, musicNumber + extension );
+                                        return client.sendMessage(roomId, {
+                                            body: msgBody,
+                                            msgtype: msgType,
+                                            url: mxc,
+                                            info: {
+                                                mimetype: mime,
+                                            }
+                                        });
+                                        
                                     }
                                 });
-                                
-                            }
-                        });
+                        
+                            });
+                            //return;
+                        } else {
+                            lilynode.renderFile(musicFilePath, { format: musicOption, voice: voiceOption }, async function(error, output){
+                                if (error) {
+                                    LogService.error(error);
+                                    return appFunction.sendSimpleMessage(client, roomId, "Bwouf, il y a eu un problème !");
+                                } else {
+                                    let mxc = await client.uploadContent(output, mime, musicNumber + extension );
+                                    return client.sendMessage(roomId, {
+                                        body: msgBody,
+                                        msgtype: msgType,
+                                        url: mxc,
+                                        info: {
+                                            mimetype: mime,
+                                        }
+                                    });
+                                    
+                                }
+                            });
+                        }
                     }
                 }
             });
