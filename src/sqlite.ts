@@ -63,7 +63,7 @@ module.exports = {
         });
     },   
     listMusics: function(callback:any){
-        db.all("SELECT * FROM Musics", function(err, list) {
+        db.all("SELECT * FROM Musics ORDER BY musicNumber ASC", function(err, list) {
             if (err){
                 LogService.error(err);
                 return;
