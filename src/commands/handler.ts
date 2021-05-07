@@ -3,6 +3,7 @@ import { runHelloCommand } from "./hello";
 import { runMesseCommand } from "./messe";
 import { runAutoCommand } from "./auto";
 import { runMusicCommand } from "./music";
+import { runAmourCommand } from "./amour";
 import { runInviteCommand } from "./invite";
 import config from "../config";
 import * as htmlEscape from "escape-html";
@@ -95,6 +96,7 @@ export default class CommandHandler {
             const prefixUsed = prefixes.find(p => event.textBody.startsWith(p));
                         
             let args = [];
+            let textBody = "";
             
             // Try and figure out what command the user ran, defaulting to help
             try {
@@ -104,8 +106,10 @@ export default class CommandHandler {
                         return; 
                     }
                     args = event.textBody.trim().split(' ');
+                    textBody = event.textBody.trim().substring(args[0].length).trim()
                 } else {
                     args = event.textBody.substring(prefixUsed.length).trim().split(' ');
+                    textBody = event.textBody.trim().substring(prefixUsed.length + 1 + args[0].length).trim()
                 }
             } catch (e) {
                 LogService.error("getJoinedRoomMembers error", e)
@@ -118,6 +122,8 @@ export default class CommandHandler {
                 const salutations = ['hello', 'salut', 'bonjour'];
                 const invitations = ['invite', 'cherche'];
                 const musications = ['music', 'musique', 'song', 'chanson', 'chant'];
+                const amourations = ['amour', 'amour+', 'amourcron+', 'amourcron', 'amourcron-']
+                
                 if ( prefixUsed === "!music" ) {
                     args.unshift("music");
                     return runMusicCommand(roomId, event, args, this.client);
@@ -133,6 +139,8 @@ export default class CommandHandler {
                     return runInviteCommand(roomId, event, args, this.client);
                 } else if ( musications.includes(args[0]) ){
                     return runMusicCommand(roomId, event, args, this.client);
+                } else if ( amourations.includes(args[0]) ){
+                    return runAmourCommand(roomId, args, this.client, textBody);
                 } else {
                     const help = "" +
                         "- !patton messe [tout]     - Afficher les lectures de la messe du jour ( ajouter 'tout' pour obtenir le contenu des textes également ).\n" +

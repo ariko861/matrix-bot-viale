@@ -12,6 +12,9 @@ import {promises as fs} from "fs";
 import config from "./config";
 import CommandHandler from "./commands/handler";
 import { runMesseCommand } from "./commands/messe";
+import { runAmourCommand } from "./commands/amour";
+
+const appFunction = require("./global");
 
 const cron = require('node-cron');
 const db = require('./sqlite');
@@ -19,6 +22,8 @@ const viale = require('./global');
 
 db.createCronTable();
 db.createMusicsTable();
+db.createAmoursTable();
+db.createAmourCronsTable();
 
 // First things first: let's make the logs a bit prettier.
 LogService.setLogger(new RichConsoleLogger());
@@ -98,6 +103,25 @@ LogService.info("index", "Bot starting...");
                 LogService.info("timer set in : " + diffTime / 60000 + " minutes for room: " + row.roomId);
             });
         });
+        
+        //// FOR AMOUR CRONS
+        db.getAmourCrons(function(list){ //get all row in Crons table
+            list.forEach(function(row){  // for each row
+                let clock = row.time.split(':');
+                let now = new Date();
+                let timeout = new Date();
+                timeout.setHours(clock[0], clock[1]);
+                if ( timeout < now ) {
+                    timeout.setDate(timeout.getDate() + 1);
+                }
+                let diffTime = Math.abs(timeout.getTime() - now.getTime());
+                setTimeout(function(){
+                    runAmourCommand(row.roomId, ['amour'], client, '')
+                }, diffTime);
+                LogService.info("timer set in : " + diffTime / 60000 + " minutes for room: " + row.roomId);
+            });
+        });
+        /// End of AMOUR CRONS
     });
     
     
