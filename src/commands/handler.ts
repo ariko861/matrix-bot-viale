@@ -119,6 +119,7 @@ export default class CommandHandler {
             try {
                 if (!userIsAllowed) return appFunction.sendSimpleMessage(this.client, roomId, "Désolé, Patton n'obéit qu'à ses maîtres."); // renvoie un message si l'utilisateur n'est pas autorisé.
                 
+                args[0] = args[0].toLowerCase();
                 const salutations = ['hello', 'salut', 'bonjour'];
                 const invitations = ['invite', 'cherche'];
                 const musications = ['music', 'musique', 'song', 'chanson', 'chant'];
