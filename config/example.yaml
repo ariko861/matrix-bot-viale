@@ -31,5 +31,8 @@ profile:
     displayname: "AELF Bot"
     avatar: true
 
+### Token pour le formulaire de contact :
+formToken: ""
+    
 # Log level for bot, INFO | DEBUG | WARN | ERROR
 logLevel: "INFO"

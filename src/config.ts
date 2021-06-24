@@ -20,6 +20,7 @@ interface IConfig {
         displayname: string;
         avatar?: boolean;
     }
+    formToken: string;
     logLevel: string;
 }
 

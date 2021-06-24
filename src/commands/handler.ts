@@ -5,6 +5,7 @@ import { runAutoCommand } from "./auto";
 import { runMusicCommand } from "./music";
 import { runAmourCommand } from "./amour";
 import { runInviteCommand } from "./invite";
+import { runFormCommand } from "./form";
 import config from "../config";
 import * as htmlEscape from "escape-html";
 const fs = require('fs');
@@ -123,7 +124,8 @@ export default class CommandHandler {
                 const salutations = ['hello', 'salut', 'bonjour'];
                 const invitations = ['invite', 'cherche'];
                 const musications = ['music', 'musique', 'song', 'chanson', 'chant'];
-                const amourations = ['amour', 'amour+', 'amourcron+', 'amourcron', 'amourcron-']
+                const amourations = ['amour', 'amour+', 'amourcron+', 'amourcron', 'amourcron-'];
+                const formulations = ['form', 'formulaire'];
                 
                 if ( prefixUsed === "!music" ) {
                     args.unshift("music");
@@ -138,6 +140,9 @@ export default class CommandHandler {
                 } else if ( invitations.includes(args[0]) ){
                     if ( !inviteIsAllowed ) return appFunction.sendSimpleMessage(this.client, roomId, "Désolé, Patton n'obéit qu'à ses maîtres."); // renvoie un message si l'utilisateur n'est pas autorisé.
                     return runInviteCommand(roomId, event, args, this.client);
+                } else if ( formulations.includes(args[0]) ){
+                    if ( !inviteIsAllowed ) return appFunction.sendSimpleMessage(this.client, roomId, "Désolé, Patton n'obéit qu'à ses maîtres."); // renvoie un message si l'utilisateur n'est pas autorisé.
+                    return runFormCommand(roomId, args, this.client);
                 } else if ( musications.includes(args[0]) ){
                     return runMusicCommand(roomId, event, args, this.client);
                 } else if ( amourations.includes(args[0]) ){
