@@ -32,6 +32,7 @@ profile:
     avatar: true
 
 ### Token pour le formulaire de contact :
+formUrl: ""
 formToken: ""
     
 # Log level for bot, INFO | DEBUG | WARN | ERROR
